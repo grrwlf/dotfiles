@@ -1,3 +1,6 @@
+runtime bundle/vim-pathogen/autoload/pathogen.vim
+execute pathogen#infect()
+
 syntax enable
 filetype plugin on
 filetype indent on
@@ -19,10 +22,10 @@ set foldmethod=marker
 set foldcolumn=0
 set backspace=indent,eol,start
 set incsearch
-set ignorecase
+"set ignorecase
 set formatoptions+=ro
 set cinoptions+=g0,(4
-set hlsearch
+set nohlsearch
 set guifont=Terminus\ 13
 set mouse=nirv
 set laststatus=2
@@ -35,15 +38,20 @@ set modeline
 set textwidth=80
 set timeoutlen=500
 set directory=~/tmp/vim.swp/,.,~/tmp,/var/tmp,/tmp
+set hidden
 
-au Bufenter * syntax sync minlines=50
+au BufEnter * syntax sync minlines=50
+
+au FileType *nix,nixos-config set expandtab
+au FileType *nix,nixos-config set shiftwidth=2
+au FileType *nix,nixos-config set tabstop=2
 
 au FileType *haskell set expandtab
 au FileType *haskell set smartindent
+au FileType *haskell set shiftwidth=2
+au FileType *haskell set tabstop=2
 au FileType cabal set expandtab
-
-" Enable auto-paragraph-reformat, when editing emails
-"au FileType mail set formatoptions+=an
+au FileType python set expandtab
 
 " When editing a file, always jump to the last known cursor position.
 " Don't do it when the position is invalid or when inside an event handler
@@ -53,16 +61,19 @@ au BufReadPost *
 	\   exe "normal g`\"" |
 	\ endif
 
-"highlight ExtraWhitespace ctermbg=red guibg=red
-"au Syntax * syn match ExtraWhitespace /\s\+$/
+" NERDtree auto-close
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+" Remove trailing whitespaces before saving
+autocmd BufWritePre * :%s/\s\+$//e
 
 " General bindings
 inoremap <Leader><Leader> <Leader>
 inoremap <Esc><Esc> <Esc>
 
 " Save
-nnoremap <F2> <ESC>:w<CR>
-inoremap <F2> <ESC>:w<CR>
+nnoremap <F2> <ESC>:w!<CR>
+inoremap <F2> <ESC>:w!<CR>
 
 " Reformat
 nnoremap <F3> gqap
@@ -71,6 +82,9 @@ vnoremap <F3> gq
 
 " Fast command line
 nnoremap ! :!
+
+" Help on word
+map <F1> :exec ":help " . expand('<cword>')<CR>
 
 " Screen
 nnoremap s :!screen<CR>
@@ -81,11 +95,10 @@ nnoremap k gk
 nnoremap Y y$
 
 " Quick quit
-"nnoremap <ESC><ESC><ESC><ESC> :qa<CR>
-nnoremap q <ESC>:q<CR>
+nnoremap q <C-w>q
 
 " Visual mode tweaks
-vnoremap : y:<C-r>"<C-b>
+vnoremap : y:<Space><C-r>"<C-b>
 vnoremap ! y:!<C-r>"<C-b><Right>
 
 " Easy paste
@@ -94,16 +107,30 @@ nnoremap <Leader>i :set paste<CR>i
 " Open quickfix window
 nnoremap <Leader>f :cope<CR>
 
-" make
-nnoremap <F5> :make<CR>
-inoremap <F5> <Esc>:make<CR>
+" Tab key cycles through windows
+noremap <Tab> <C-w>w
 
 " Tabs
 map gr gT
 map tn :tabnew<CR>
 map th :tabnew $HOME<CR>
 
-" Quicfix bindings {{{
+" Clipboard helpers
+if has("x11")
+	vnoremap y "+y
+	vnoremap d "+d
+	vnoremap c "+c
+	vnoremap p "+p
+	nnoremap Y "+y$
+	nnoremap D "+D
+	nnoremap yy "+yy
+	nnoremap yw "+yw
+	nnoremap dd "+dd
+	nnoremap p "+p
+	nnoremap P "+P
+endif
+
+" Quicfix bindings
 function! QFmap(a,b)
 	exe "au BufWinEnter quickfix map <buffer> " . a:a . " " . a:b
 endfunction
@@ -116,201 +143,34 @@ QFmap <C-o> :cold<cr>
 QFmap <C-i> :cnew<cr>
 QFmap <Leader>f <C-w>q
 QFmap q :q<cr>
-" }}}
 
-" Clipboard bindings {{{
-if has("x11")
-	vnoremap y "+y
-	vnoremap d "+d
-	vnoremap c "+c
-	vnoremap p "+p
-	nnoremap Y "+y$
-	nnoremap yy "+yy
-	nnoremap yw "+yw
-	nnoremap dd "+dd
-	nnoremap p "+p
-	nnoremap P "+P
-endif
-" }}}
-
-" Russian layout bindings {{{
-function! KBmap(a,b)
-	exe "map " . a:a . " " . a:b
-	exe "imap <Esc>" . a:a . " <Esc>" . a:b
-	exe "cmap " . a:a . " " . a:b
-	exe "cmap <Esc>" . a:a . " <Esc>" . a:b
-endfunction
-command! -nargs=+ KBmap :call KBmap(<f-args>)
-
-KBmap ё `
-KBmap й q
-KBmap ц w
-KBmap у e
-KBmap к r
-KBmap е t
-KBmap н y
-map нн yy
-KBmap г u
-KBmap ш i
-KBmap щ o
-KBmap з p
-KBmap х [
-KBmap ъ ]
-KBmap ф a
-KBmap ы s
-KBmap в d
-map вв dd
-KBmap а f
-KBmap п g
-map пй gq
-map пйй gqq
-KBmap р h
-KBmap о j
-KBmap л k
-KBmap д l
-KBmap ж ;
-KBmap э '
-KBmap я z
-map ящ zo
-map яс zc
-KBmap ч x
-KBmap с c
-KBmap м v
-KBmap и b
-KBmap т n
-KBmap ь m
-KBmap б ,
-KBmap ю .
-KBmap Ё ~
-KBmap Й Q
-KBmap Ц W
-KBmap У E
-KBmap К R
-KBmap Е T
-KBmap Н Y
-KBmap Г U
-KBmap Ш I
-KBmap Щ O
-KBmap З P
-KBmap Х {
-KBmap Ъ }
-KBmap Ф A
-KBmap Ы S
-KBmap В D
-KBmap А F
-KBmap П G
-KBmap Р H
-KBmap О J
-KBmap Л K
-KBmap Д L
-KBmap Ж :
-KBmap Э "
-KBmap Я Z
-KBmap Ч X
-KBmap С C
-KBmap М V
-KBmap И B
-KBmap Т N
-KBmap Ь M
-KBmap Б <
-KBmap Ю >
-"}}}
-
-" Readline-style bindings {{{
+" Readline-style bindings
 " FIXME: Works ok for console version of vim only. They actually maps
 " <Esc><key>. That causes problems in normal mode.
-" Map <A-f>
 imap <Esc>f <C-o>e<C-o>a
 cmap <Esc>f <S-Right>
-
-" Map <A-b>
 imap <Esc>b <C-o>b
 cmap <Esc>b <S-Left>
-
-" Map <A-d>
 imap <Esc>d <C-o>ved
-"}}}
 
-" Find file in current directory and edit it. {{{
-function! Find(...)
-  let path="."
-  if a:0==2
-    let path=a:2
-  endif
-  let l:list=system("find ".path. " -name '".a:1."' | grep -v .svn ")
-  let l:num=strlen(substitute(l:list, "[^\n]", "", "g"))
-  if l:num < 1
-    echo "'".a:1."' not found"
-    return
-  endif
-  if l:num == 1
-    exe "open " . substitute(l:list, "\n", "", "g")
+" Wrap encodings on F8
+let g:enc_index = 0
+function! ChangeFileencoding()
+  let encodings = ['cp1251', 'cp866', 'utf-8']
+  execute 'e ++enc='.encodings[g:enc_index].' %:p'
+  echo encodings[g:enc_index]
+  if g:enc_index >= len(encodings)-1
+	  let g:enc_index = 0
   else
-    let tmpfile = tempname()
-    exe "redir! > " . tmpfile
-    silent echon l:list
-    redir END
-    let old_efm = &efm
-    set efm=%f
-
-    if exists(":cgetfile")
-        execute "silent! cgetfile " . tmpfile
-    else
-        execute "silent! cfile " . tmpfile
-    endif
-
-    let &efm = old_efm
-
-    " Open the quickfix window below the current window
-    botright copen
-
-    call delete(tmpfile)
+	  let g:enc_index = g:enc_index + 1
   endif
-endfunction
-command! -nargs=* Find :call Find(<f-args>)
-" }}}
+endf
+nmap <F8> :call ChangeFileencoding()<CR>
 
-" Smart tag navigation {{{
-let g:rt_cw = ''
-function! RT()
-	let cw = expand('<cword>')
-	let cf = expand('%:p')
-	let cl = line('.')
-
-	if g:rt_cw == ''
-		let g:rt_cw = cw
-	endif
-
-	let i = 0
-	let m = 0
-	for f in taglist('^' . g:rt_cw . '$')
-		let i = i+1
-		if f.cmd == cl && fnamemodify(f.filename, ':p') == cf
-			let m = i
-		endif
-	endfor
-	if i > 0 && m > 0
-		" We are browsing g:rt_cw tag
-		if m == i
-			let m = 1
-		else
-			let m = m+1
-		endif
-		execute m . "tag " . cw
-	else
-		" We are somewhere in the code or no tags
-		if g:rt_cw != cw
-			" Current word has changed, try the new one
-			let g:rt_cw = cw
-			call RT()
-		else
-			" Blindly follow the tag
-			execute "tag " . cw
-		endif
-	endif
-endfunction
-map <C-]> :call RT()<CR>
-" }}}
+" Cyrvim
+let g:cyrvim_map_esc = 1
+let g:cyrvim_map_cmd = 1
+let g:cyrvim_map_cmd_esc = 1
 
 " TagList
 "let g:Tlist_Use_Horiz_Window = 1
@@ -320,33 +180,38 @@ map <C-]> :call RT()<CR>
 "nnoremap <Leader>l <ESC>:TlistToggle<CR>
 
 " TagBar
-let g:tagbar_autofocus = 1
-let g:tagbar_sort = 1
-nnoremap <Leader>l <ESC>:TagbarToggle<CR>
+"let g:tagbar_autofocus = 1
+"let g:tagbar_sort = 1
+"nnoremap <Leader>l <ESC>:TagbarToggle<CR>
 "autocmd VimEnter * nested :call tagbar#autoopen(1)
 "autocmd BufEnter * nested :call tagbar#autoopen(0)
 "autocmd FileType c,cpp,haskell nested :TagbarOpen
 
 " NERDTree settings
-let g:NERDTreeWinSize=25
+let g:NERDChristmasTree=1
+let g:NERDTreeChDirMode=2
+let g:NERDTreeMinimalUI=1
+let g:NERDTreeWinSize=35
 let g:NERDTreeIgnore=['\.o$', '\.ko$', '^cscope', '\.hi']
-nnoremap <Leader>n <ESC>:NERDTreeToggle<CR>
-inoremap <Leader>n <ESC>:NERDTreeToggle<CR>
+let g:NERDTreeCasadeOpenSingleChildDir=1
+noremap <F4> <ESC>:NERDTreeFind<CR>
 command -nargs=0 NF :NERDTreeFind
+
+function! NERDTreeOpenTerm(node)
+	let oldcwd = getcwd()
+	call a:node.path.getDir().changeToDir()
+	exec '!screen'
+	exec "cd " . oldcwd
+endfunction
 
 " BufferExplorer
 nnoremap <Leader>e <Esc>:BufExplorer<CR>
+noremap <Space> <Esc>:BufExplorer<CR>
 inoremap <Leader>e <Esc>:BufExplorer<CR>
 
 " EasyGrep
 let g:EasyGrepRecursive = 1
 let g:EasyGrepMode = 2
-
-" Haskell
-"let g:haddock_browser = "firefox"
-"let g:haddock_browser_callformat = '%s %s'
-"let g:haskell_indent_case = 0
-"let g:haskell_indent_if = 0
 
 " Local vimrc
 let g:local_vimrc = '.vimrc_local.vim'
@@ -361,3 +226,7 @@ map <C-X> \\\j
 
 " SuperTab
 let g:SuperTabDefaultCompletionType = "context"
+
+" Surround
+xmap s S
+

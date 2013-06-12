@@ -20,6 +20,8 @@ set editor="urxvt -e vim '+set ft=mail'"
 
 "set titlestring="Mozilla Aurora"
 
+set urlseparator=
+
 " Fullscreen-like commands
 "map <F10> :set go=brB<CR>
 "map <F11> :set go=brmTB<CR>
@@ -113,11 +115,19 @@ cmap <A-в> <C-S-Right><Del>
 map gr gT
 map пк gT
 map пе gt
+map пп gg
+map . /
 
 map <A-q> gT
 map <A-й> gT
 map <A-w> gt
 map <A-ц> gt
+imap <A-q> <Esc>gT
+imap <A-й> <Esc>gT
+imap <A-w> <Esc>gt
+imap <A-ц> <Esc>gt
+
+
 map <A-3> :tabmove +1<cr>
 map <A-`> :tabmove -1<cr>
 map <C-a>c :tabopen<cr>gh
@@ -135,8 +145,11 @@ map d D
 "map f F
 
 " Command line mappings
+" cmap <C-n> <Tab>
+" cmap <C-p> <S-Tab>
 cmap <C-p> <Up>
-cmap <C-n> <Down>
+" cmap <C-т> <Tab>
+cmap <C-з> <Up>
 
 " Autocommands
 " autocmd PageLoad linux.org.ru zoom 120

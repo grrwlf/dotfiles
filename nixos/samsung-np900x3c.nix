@@ -3,7 +3,30 @@
 
 { config, pkgs, ... }:
 
-{
+let 
+  haskell_packages_base = self : [
+    self.haskellPlatform
+    self.cabalInstall
+  ];
+
+  haskell_packages = self : [
+    self.haskellPlatform
+    self.cabalInstall
+    self.happstackServer
+    self.happstackHamlet
+    self.happstackUtil
+    self.HSH
+    self.cmdlib
+    self.ghcMod
+    self.hoogle
+    self.haskdogs
+    self.hasktags
+    self.regexPcre
+    self.happy
+    self.HaXml
+  ];
+
+in {
   require = [
       # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
@@ -103,6 +126,8 @@
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
+  
+  services.dbus.packages = [ pkgs.gnome.GConf ];
 
   # Enable the X11 windowing system.
   services.xserver = {
@@ -140,7 +165,7 @@
         Option "FingerPress"               "30"
         Option "MaxTapTime"                "100"
         Option "MaxDoubleTapTime"          "150"
-        Option "FastTaps"                  "1"
+        Option "FastTaps"                  "0"
         Option "VertTwoFingerScroll"       "1"
         Option "HorizTwoFingerScroll"      "1"
         Option "TrackstickSpeed"           "0"
@@ -180,9 +205,6 @@
       dejavu_fonts
       terminus_font
       bakoma_ttf
-      #clearlyU
-      #cm_unicode
-      #andagii
       bakoma_ttf
       ubuntu_font_family
       vistafonts
@@ -232,14 +254,13 @@
     mc
     rxvt_unicode
     vimHugeX
-    #chromeWrapper
-    opera
     firefoxWrapper
     glxinfo
     feh
     xcompmgr
     zathura
     evince
+    xneur
     gxneur
     MPlayer
     xlibs.xev
@@ -248,74 +269,50 @@
     djvulibre
     ghostscript
     djview4
-    #conky
-    #dzen2
-    #dmenu
-    skype_linux
     tightvnc
-    thunderbird
+    #thunderbird
     wine
-    xfce.xarchiver
+    # xfce.xarchiver
+    xfce.xfce4_cpufreq_plugin
+    xfce.xfce4_systemload_plugin
+    xfce.gigolo
+    xfce.xfce4_taskmanager
     vlc
     easytag
     gqview
     libreoffice
-    #gnome_mplayer
+    gnome_mplayer
     #linuxPackages.virtualbox
     #linuxPackages.virtualboxGuestAdditions
     #impressive
     #pianobooster
     pidgin
-    gnome2.zenity
+    #gnome2.zenity
     wireshark
-    ghdl
+    #ghdl
+    gimp_2_8
+    #tremulous
+    #opencv
+    skype
 
-    (pkgs.haskellPackages.ghcWithPackages (self : [
-        self.haskellPlatform
-        self.happstackServer
-        self.happstackHamlet
-        self.happstackUtil
-        self.cabalInstall
-        self.HSH
-        self.cmdlib
-        self.ghcMod
-        self.hoogle
-        self.haskdogs
-        self.hasktags
-        self.regexPcre
-        self.happy
-    ]))
+    hask_761
 
     devenv
     freetype_subpixel
-    xlibs.libXft_lcd
-    #libXft_lcd
   ];
 
 
   nixpkgs.config = {
-    #chrome.enableRealPlayer = true;
     chrome.jre = true;
-    #firefox.enableRealPlayer = true;
     firefox.jre = true;
-    #subversion.saslSupport = false; #true;
-    #freetype.useEncumberedCode = true;
 
     packageOverrides = pkgs: {
-      libass = pkgs.libass.override {
-        enca = null;
-      };
-
-      xorg = pkgs.xorg // { xf86videointel = pkgs.xorg.xf86videointel_2_17_0; } ;
-
       freetype_subpixel = pkgs.freetype.override {
         useEncumberedCode = true;
       };
 
-      #libXft_lcd = pkgs.lib.overrideDerivation pkgs.xlibs.libXft (old :
-      #  old // { patches = [ ./libXft-2.1.14-lcd-cleartype.patch ]; }
-      #);
-
+      hask_761 = (pkgs.haskellPackages_ghc761.ghcWithPackages haskell_packages_base);
+      
       devenv = pkgs.myEnvFun {
         name = "dev";
 
@@ -337,7 +334,9 @@
           freetype
           fontconfig
           ncurses
+          curl
           zlib
+          opencv
           xlibs.xproto
           xlibs.libX11
           xlibs.libXt
