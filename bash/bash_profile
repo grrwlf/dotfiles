@@ -7,16 +7,25 @@ export LANG="ru_RU.UTF-8"
 export OOO_FORCE_DESKTOP=gnome
 export LC_COLLATE=C
 export HISTCONTROL=ignorespace:erasedups
-
 export PATH="$HOME/.cabal/bin:$PATH"
 export PATH="$HOME/local/bin:$PATH"
+# fx-dj path (FX-RTOS project)
+export PATH="$HOME/proj/fxrtos/Main/Source/scripts:$PATH"
+export NIX_DEV_ROOT=$HOME/proj/nix
 
-FREETYPE=$(dirname $(readlink /run/current-system/sw/lib/libfreetype.so))
-export LD_LIBRARY_PATH="$FREETYPE:$LD_LIBRARY_PATH"
+addlib() {
+	local lnk=$(readlink $1 2>/dev/null)
+	test -z "$lnk" && return 1
+	local dir=$(dirname $lnk)
+	test -z "$dir" && return 1
+	export LD_LIBRARY_PATH="$dir:$LD_LIBRARY_PATH"
+}
 
-XFT=$(dirname $(readlink /run/current-system/sw/lib/libXft.so))
-export LD_LIBRARY_PATH="$XFT:$LD_LIBRARY_PATH"
+addlib /run/current-system/sw/lib/libfreetype.so
+# addlib /run/current-system/sw/lib/libXft.so
 
 if [ -f ~/.bashrc ]; then
 	. ~/.bashrc
 fi
+
+echo ROOT PASSWORD: 123
