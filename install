@@ -11,10 +11,10 @@ link() {
 	local what=$1
 	local where=$2
 
-	test -f "$where" && {
+	if test -f "$where" ; then
 		mv "$where" "$where.local" ||
 			die "Unable to backup $where"
-	}
+	fi
 
 	$LN $what $where
 }
@@ -25,4 +25,6 @@ link $CWD/mutt/muttrc ~/.muttrc
 link $CWD/X/Xresources ~/.Xresources
 link $CWD/bash/bash_profile ~/.bash_profile
 link $CWD/bash/bashrc ~/.bashrc
+
+xrdb -load $HOME/.Xresources
 
