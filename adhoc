@@ -1,0 +1,22 @@
+#!/bin/sh
+
+(
+set -x
+#IF=wlan0
+IF=wlp1s0
+
+wicd-cli --wireless -x >/dev/null 2>&1
+systemctl stop wicd
+
+dhclient -r $IF
+ifconfig $IF down
+iwconfig $IF ap off
+iwconfig $IF mode ad-hoc
+iwconfig $IF key "s:Qwertyasdf123"
+iwconfig $IF essid "NokiaHotspot"
+iwconfig $IF channel 11
+ifconfig $IF up
+dhclient -d -v $IF
+)
+
+systemctl start wicd

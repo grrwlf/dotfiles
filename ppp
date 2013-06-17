@@ -1,0 +1,51 @@
+#!/bin/sh
+
+IP=89.175.62.250
+
+mkscript() {
+	cat > $1
+	chmod +x $1
+}
+
+mknod /dev/ppp c 108 0
+
+R=`mktemp`
+T=`mktemp -d`
+cp -v /etc/resolv.conf $R
+
+ROUTE=`which route`
+ENV=`which env`
+AWK=`which awk`
+SYSTEMCTL=`which systemctl`
+IFCONFIG=`which ifconfig`
+
+mkscript $T/up << EOF
+	( echo "nameserver \$DNS1" 
+	  echo "nameserver \$DNS2" ) > /etc/resolv.conf
+
+	NET=\`echo \$IPREMOTE | $AWK -F '.' '{printf("%s.%s.%s.0",\$1,\$2,\$3);}'\`
+	$ROUTE add -net \$NET netmask 255.255.255.0 dev \$IFNAME
+	$ROUTE add -net 192.168.3.0 netmask 255.255.255.0 dev \$IFNAME
+	$SYSTEMCTL restart nscd
+	$IFCONFIG \$IFNAME mtu 1386
+EOF
+
+pppd pty "pptp $IP --nolaunchpppd" \
+	debug lock noauth nodeflate nobsdcomp noaccomp \
+	noipdefault \
+	persist \
+	maxfail 100 \
+	usepeerdns \
+	refuse-pap \
+	refuse-eap \
+	refuse-chap \
+	refuse-mschap \
+	require-mppe \
+	name "prosoft-msk\\mironov.s" \
+	nodetach \
+	remotename "VPN Prosoft PPTP" \
+	ipparam $T
+
+cp $R /etc/resolv.conf
+rm -rf $T
+
