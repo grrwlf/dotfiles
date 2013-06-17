@@ -1,0 +1,19 @@
+#!/bin/sh
+
+mkdir $HOME/.vim
+cd $HOME/.vim
+
+mkdir bundle
+cd bundle
+
+git clone https://github.com/tpope/vim-pathogen
+git clone https://github.com/vim-scripts/a.vim
+git clone https://github.com/vim-scripts/comments.vim
+git clone https://github.com/vim-scripts/grep.vim
+git clone https://github.com/scrooloose/nerdtree.git
+git clone https://github.com/ervandew/supertab
+git clone https://github.com/tpope/vim-pathogen
+git clone https://github.com/tpope/vim-surround
+
+
+
