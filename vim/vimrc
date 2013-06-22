@@ -46,6 +46,11 @@ au FileType *nix,nixos-config set expandtab
 au FileType *nix,nixos-config set shiftwidth=2
 au FileType *nix,nixos-config set tabstop=2
 
+au FileType sh set expandtab
+au FileType sh set smartindent
+au FileType sh set shiftwidth=2
+au FileType sh set tabstop=2
+
 au FileType *haskell set expandtab
 au FileType *haskell set smartindent
 au FileType *haskell set shiftwidth=2
@@ -65,7 +70,7 @@ au BufReadPost *
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 " Remove trailing whitespaces before saving
-autocmd BufWritePre * :%s/\s\+$//e
+"autocmd BufWritePre * :%s/\s\+$//e
 
 " General bindings
 inoremap <Leader><Leader> <Leader>

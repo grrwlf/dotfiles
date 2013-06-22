@@ -25,6 +25,7 @@ link $CWD/mutt/muttrc ~/.muttrc
 link $CWD/X/Xresources ~/.Xresources
 link $CWD/bash/bash_profile ~/.bash_profile
 link $CWD/bash/bashrc ~/.bashrc
+link $CWD/screen/screenrc ~/.screenrc
 
 xrdb -load $HOME/.Xresources
 
