@@ -23,7 +23,7 @@ devenv() 	{ load-env-dev ; }
 manconf() 	{ man configuration.nix ; }
 
 # Comit exactly one file to the git
-my_git_1() { (
+my_git1() { (
 	F=$1
 	if test -z "$F" ; then
 		FILES=$(git status --porcelain 2>/dev/null | grep "^ M" | awk '{print $2}')
@@ -63,10 +63,11 @@ my_2gh() { (
 
 
 git() {
-	case $1 in
-		1)      my_git1 "$@" ;;
-		2gh) 	my_2gh "$@" ;;
-		*)      `which git` "$@" ;;
+  local arg=$1 ; shift
+	case $arg in
+		c1)       my_git1 "$@" ;;
+		2gh) 	    my_2gh "$@" ;;
+		*)        `which git` $arg "$@" ;;
 	esac
 }
 
