@@ -7,6 +7,44 @@ mkscript() {
 	chmod +x $1
 }
 
+NET="prosoft-msk\\\\mironov.s"
+
+mkdir /etc/ppp 2>/dev/null
+
+if ! test -f /etc/ppp/chap-secrets ; then
+  echo -n "Enter ppp pasword for $NET: "
+  read pass
+  echo "$NET * $pass" >/etc/ppp/chap-secrets
+  #chmod 400 /etc/ppp/chap-secrets
+fi
+
+if ! test -f /etc/ppp/ip-up ; then
+
+cat >/etc/ppp/ip-up <<"EOF"
+#!/bin/sh
+if test -x "$6/up" ; then
+    $6/up $1 $2 $3 $4 $5
+fi
+EOF
+
+chmod +x /etc/ppp/ip-up
+
+fi
+
+if ! test -f /etc/ppp/ip-down ; then
+
+cat >/etc/ppp/ip-down <<"EOF"
+#!/bin/sh
+
+if test -x "$6/down" ; then
+  $6/down $1 $2 $3 $4 $5
+fi
+EOF
+
+chmod +x /etc/ppp/ip-down
+
+fi
+
 mknod /dev/ppp c 108 0
 
 R=`mktemp`
