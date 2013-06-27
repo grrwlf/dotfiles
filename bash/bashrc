@@ -71,6 +71,5 @@ git() {
 	esac
 }
 
-
 . ~/proj/nixdev/nixrc
 

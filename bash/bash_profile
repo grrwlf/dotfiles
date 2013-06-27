@@ -22,10 +22,8 @@ addlib() {
 }
 
 addlib /run/current-system/sw/lib/libfreetype.so
-# addlib /run/current-system/sw/lib/libXft.so
 
 if [ -f ~/.bashrc ]; then
 	. ~/.bashrc
 fi
 
-echo ROOT PASSWORD: 123
