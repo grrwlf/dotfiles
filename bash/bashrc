@@ -21,6 +21,7 @@ vimless() 	{ vim -R "$@" - ; }
 pfind() 	{ find -iname "*$1*" ; }
 devenv() 	{ load-env-dev ; }
 manconf() 	{ man configuration.nix ; }
+gf()      { git fetch github || git fetch origin ; }
 
 vim() {
   case "$@" in
