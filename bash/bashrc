@@ -61,6 +61,5 @@ git1() { (
 ) }
 
 
-. ~/proj/nix/nixrc
-. ~/local/bin/tfrc
+. ~/proj/nixrc/nixrc
 

@@ -11,7 +11,7 @@ export PATH="$HOME/.cabal/bin:$PATH"
 export PATH="$HOME/local/bin:$PATH"
 # fx-dj path (FX-RTOS project)
 export PATH="$HOME/proj/fxrtos/Main/Source/scripts:$PATH"
-export NIX_DEV_ROOT=$HOME/proj/nix
+export NIX_DEV_ROOT=$HOME/proj/nixrc
 
 addlib() {
 	local lnk=$(readlink $1 2>/dev/null)
@@ -28,4 +28,3 @@ if [ -f ~/.bashrc ]; then
 	. ~/.bashrc
 fi
 
-echo ROOT PASSWORD: 123

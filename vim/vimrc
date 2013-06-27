@@ -39,6 +39,8 @@ set textwidth=80
 set timeoutlen=500
 set directory=~/tmp/vim.swp/,.,~/tmp,/var/tmp,/tmp
 set hidden
+set nowrap
+set completeopt=longest,menu
 
 au BufEnter * syntax sync minlines=50
 
@@ -80,6 +82,9 @@ nnoremap <F3> gqap
 inoremap <F3> <C-o>gqap
 vnoremap <F3> gq
 
+" The only window
+nnoremap 1 <C-w>o
+
 " Fast command line
 nnoremap ! :!
 
@@ -117,6 +122,24 @@ map th :tabnew $HOME<CR>
 
 " Clipboard helpers
 if has("x11")
+	vnoremap "a "ay
+	vnoremap "b "by
+	vnoremap "c "cy
+	vnoremap "d "dy
+	vnoremap "e "yy
+
+	nnoremap "a "ap
+	nnoremap "b "bp
+	nnoremap "c "cp
+	nnoremap "d "dp
+	nnoremap "e "ep
+
+	nnoremap "A "aP
+	nnoremap "B "bP
+	nnoremap "C "cP
+	nnoremap "D "dP
+	nnoremap "E "eP
+
 	vnoremap y "+y
 	vnoremap d "+d
 	vnoremap c "+c
@@ -226,6 +249,8 @@ map <C-X> \\\j
 
 " SuperTab
 let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabContextDefaultCompletionType = "<c-n>"
+"let g:SuperTabLongestEnhanced = 1
 
 " Surround
 xmap s S
