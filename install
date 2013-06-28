@@ -7,16 +7,54 @@ cd `dirname $0`
 CWD=`pwd`
 export LANG=C
 
+if echo "$@" | grep -qwe '-f' ; then
+  echo -n 'Sure to force-install? [y/n]'
+  read ans
+  if test "$ans" != "y" ; then
+    exit 1
+  fi
+  F=y
+else
+  F=n
+fi
+
 link() {
 	local what=$1
 	local where=$2
 
-	if test -f "$where" ; then
+  if test $F = n ; then
+    if test -f "$where" ; then
+      echo "File $where already exists"
+      return 1
+    fi
+  else
 		mv "$where" "$where.local" ||
 			die "Unable to backup $where"
-	fi
+  fi
 
 	$LN $what $where
+}
+
+copy() {
+	local what=$1
+	local where=$2
+  local d=`dirname $where`
+
+  if test $F = n ; then
+    if test -f $where ; then
+      echo "File $where already exists"
+      return 1
+    fi
+  else
+		mv "$where" "$where.local" ||
+			die "Unable to backup $where"
+  fi
+
+  if ! test -d "$d" ; then
+    mkdir -p "$d" || return 2;
+  fi
+
+  cp --verbose $what $where
 }
 
 link $CWD/vim/vimrc ~/.vimrc
@@ -26,6 +64,11 @@ link $CWD/X/Xresources ~/.Xresources
 link $CWD/bash/bash_profile ~/.bash_profile
 link $CWD/bash/bashrc ~/.bashrc
 link $CWD/screen/screenrc ~/.screenrc
+
+copy $CWD/ssh/config ~/.ssh/config
+for k in $CWD/ssh/*pub ; do
+  copy $k ~/.ssh/`basename $k`
+done
 
 xrdb -load $HOME/.Xresources
 
