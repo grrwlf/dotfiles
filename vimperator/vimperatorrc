@@ -127,7 +127,6 @@ imap <A-й> <Esc>gT
 imap <A-w> <Esc>gt
 imap <A-ц> <Esc>gt
 
-
 map <A-3> :tabmove +1<cr>
 map <A-`> :tabmove -1<cr>
 map <C-a>c :tabopen<cr>gh

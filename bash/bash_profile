@@ -9,9 +9,37 @@ export LC_COLLATE=C
 export HISTCONTROL=ignorespace:erasedups
 export PATH="$HOME/.cabal/bin:$PATH"
 export PATH="$HOME/local/bin:$PATH"
-# fx-dj path (FX-RTOS project)
 export PATH="$HOME/proj/fxrtos/Main/Source/scripts:$PATH"
+export PATH="$HOME/local/avr32-gnu-toolchain-linux_x86_64/bin:$PATH"
 export NIX_DEV_ROOT=$HOME/proj/nixdev
+export DOTFILES_ROOT=$HOME/proj/dotfiles
+
+cal()     { `which cal` -m "$@" ; }
+df()      { `which df` -h "$@" ; }
+du()      { `which du` -h "$@" ; }
+man()     { LANG=C `which man` "$@" ; } 
+feh()     { `which feh` -. "$@" ; }
+
+q() 		  { exit ; }
+s() 		  { screen ; }
+e() 		  { thunar . 2>/dev/null & }
+
+log() 		{ vim /var/log/messages + ; }
+logx() 		{ vim /var/log/X.0.log + ; }
+cdt() 		{ cd $HOME/tmp ; }
+gitk() 		{ LANG=C `which gitk` "$@" & }
+mcd() 		{ mkdir "$1" && cd "$1" ; }
+vimless() { vim -R "$@" - ; }
+pfind() 	{ find -iname "*$1*" ; }
+d() 	    { load-env-dev ; }
+manconf() { man configuration.nix ; }
+gf()      { git fetch github || git fetch origin ; }
+beep()    { aplay ~/proj/dotfiles/beep.wav ; }
+wicd()    { wicd-gtk --no-tray ; }
+
+. $DOTFILES_ROOT/bash/git.sh
+. $DOTFILES_ROOT/bash/vim.sh
+. $NIX_DEV_ROOT/nixrc
 
 addlib() {
 	local lnk=$(readlink $1 2>/dev/null)
@@ -22,8 +50,4 @@ addlib() {
 }
 
 addlib /run/current-system/sw/lib/libfreetype.so
-
-if [ -f ~/.bashrc ]; then
-	. ~/.bashrc
-fi
 

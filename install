@@ -24,7 +24,7 @@ link() {
 
   if test $F = n ; then
     if test -f "$where" ; then
-      echo "File $where already exists"
+      echo "File $where already exists, use -f to overwrite"
       return 1
     fi
   else
@@ -42,7 +42,7 @@ copy() {
 
   if test $F = n ; then
     if test -f $where ; then
-      echo "File $where already exists"
+      echo "File $where already exists, use -f to overwrite"
       return 1
     fi
   else
@@ -57,12 +57,19 @@ copy() {
   cp --verbose $what $where
 }
 
+if ! bash -e "$CWD/bash/bash_profile" ; then
+  die "Looks like bash_profile is not working; aborting"
+fi
+
+if ! xrdb -load $CWD/X/Xresources ; then
+  die "Looks like Xresources can't be loaded; aborting"
+fi
+
+link $CWD/bash/bash_profile ~/.bash_profile
 link $CWD/vim/vimrc ~/.vimrc
 link $CWD/vimperator/vimperatorrc ~/.vimperatorrc
 link $CWD/mutt/muttrc ~/.muttrc
 link $CWD/X/Xresources ~/.Xresources
-link $CWD/bash/bash_profile ~/.bash_profile
-link $CWD/bash/bashrc ~/.bashrc
 link $CWD/screen/screenrc ~/.screenrc
 
 copy $CWD/ssh/config ~/.ssh/config
@@ -70,5 +77,4 @@ for k in $CWD/ssh/*pub ; do
   copy $k ~/.ssh/`basename $k`
 done
 
-xrdb -load $HOME/.Xresources
 

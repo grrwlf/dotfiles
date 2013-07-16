@@ -22,8 +22,8 @@ set foldmethod=marker
 set foldcolumn=0
 set backspace=indent,eol,start
 set incsearch
-"set ignorecase
-set formatoptions+=ro
+set ignorecase
+set formatoptions+=roj
 set cinoptions+=g0,(4
 set nohlsearch
 set guifont=Terminus\ 13
@@ -41,6 +41,7 @@ set directory=~/tmp/vim.swp/,.,~/tmp,/var/tmp,/tmp
 set hidden
 set nowrap
 set completeopt=longest,menu
+set smartindent
 
 au BufEnter * syntax sync minlines=50
 
@@ -49,16 +50,25 @@ au FileType *nix,nixos-config set shiftwidth=2
 au FileType *nix,nixos-config set tabstop=2
 
 au FileType sh set expandtab
-au FileType sh set smartindent
 au FileType sh set shiftwidth=2
 au FileType sh set tabstop=2
 
 au FileType *haskell set expandtab
-au FileType *haskell set smartindent
 au FileType *haskell set shiftwidth=2
 au FileType *haskell set tabstop=2
 au FileType cabal set expandtab
 au FileType python set expandtab
+
+au FileType *asciidoc set expandtab
+au FileType *asciidoc set tabstop=2
+au FileType *asciidoc set comments+=fb:*
+au FileType *asciidoc set comments+=fb:.
+
+au FileType *markdown set expandtab
+au FileType *markdown set tabstop=2
+au FileType *markdown set comments+=fb:*
+au FileType *markdown set comments+=fb:-
+au FileType *markdown set comments+=fb:#.
 
 " When editing a file, always jump to the last known cursor position.
 " Don't do it when the position is invalid or when inside an event handler
@@ -69,7 +79,7 @@ au BufReadPost *
 	\ endif
 
 " NERDtree auto-close
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 " Remove trailing whitespaces before saving
 "autocmd BufWritePre * :%s/\s\+$//e
