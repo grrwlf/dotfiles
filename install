@@ -61,8 +61,10 @@ if ! bash -e "$CWD/bash/bash_profile" ; then
   die "Looks like bash_profile is not working; aborting"
 fi
 
+if which xrdb >/dev/null ; then
 if ! xrdb -load $CWD/X/Xresources ; then
   die "Looks like Xresources can't be loaded; aborting"
+fi
 fi
 
 link $CWD/bash/bash_profile ~/.bash_profile
