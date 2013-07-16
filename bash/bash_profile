@@ -41,13 +41,13 @@ wicd()    { wicd-gtk --no-tray ; }
 . $DOTFILES_ROOT/bash/vim.sh
 . $NIX_DEV_ROOT/nixrc
 
-addlib() {
+tryaddlib() {
 	local lnk=$(readlink $1 2>/dev/null)
-	test -z "$lnk" && return 1
+	test -z "$lnk" && return 0
 	local dir=$(dirname $lnk)
-	test -z "$dir" && return 1
+	test -z "$dir" && return 0
 	export LD_LIBRARY_PATH="$dir:$LD_LIBRARY_PATH"
 }
 
-addlib /run/current-system/sw/lib/libfreetype.so
+tryaddlib /run/current-system/sw/lib/libfreetype.so
 
